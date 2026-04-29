@@ -387,10 +387,9 @@
   }
   .reveal-badge {
     position: absolute;
-    top: 8%; left: 8%;
-    width: 28%; height: auto;
+    top: 6%; left: 14%;
+    width: 22%; height: auto;
     pointer-events: none;
-    filter: drop-shadow(0 4px 12px rgba(0,0,0,.45));
     z-index: 2;
     /* Pop-in animation when card is revealed */
     opacity: 0;
@@ -722,15 +721,15 @@
     .nav-logo .logo-icon { height: calc(var(--logo-size, 73px) * 0.41); }
     .hero-inner {
       grid-template-columns: 1fr;
-      padding: 96px 20px 72px;
-      gap: 36px;
+      padding: 76px 20px 56px;
+      gap: 20px;
       text-align: center;
     }
     .hero-content { order: 2; }
-    .hero-visual { order: 1; min-height: 420px; }
-    .pack-stage { max-width: 240px; }
-    .hero-title { font-size: clamp(38px, 10vw, 56px); }
-    .hero-sub { margin-left: auto; margin-right: auto; font-size: 15px; }
+    .hero-visual { order: 1; min-height: 300px; }
+    .pack-stage { max-width: 200px; }
+    .hero-title { font-size: clamp(34px, 8.5vw, 48px); margin-bottom: 12px; }
+    .hero-sub { margin-left: auto; margin-right: auto; font-size: 15px; margin-bottom: 24px; }
     .hero-actions { justify-content: center; }
     .hero-stat-pills { justify-content: center; }
     .hero-badge { margin-left: auto; margin-right: auto; }
@@ -753,7 +752,10 @@
   @media (max-width: 420px) {
     .rewards-grid { grid-template-columns: 1fr; }
     .cards-grid { gap: 10px; }
-    .pack-stage { max-width: 200px; }
+    .pack-stage { max-width: 180px; }
+    .hero-visual { min-height: 260px; }
+    .hero-inner { padding: 68px 20px 48px; gap: 16px; }
+    .hero-title { font-size: clamp(30px, 8vw, 40px); }
     .hero-stat-pills .pill { font-size: 11px; padding: 7px 12px; }
   }
 </style>
