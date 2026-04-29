@@ -228,6 +228,19 @@
     0%,100% { transform: translateY(0); }
     50% { transform: translateY(-14px); }
   }
+  /* Shake burst — rotational jitter every ~5s, riding on top of float via wrapper */
+  @keyframes packShake {
+    0%, 80%, 100% { transform: rotate(0deg); }
+    82% { transform: rotate(-7deg); }
+    84% { transform: rotate(6deg); }
+    86% { transform: rotate(-5deg); }
+    88% { transform: rotate(4deg); }
+    90% { transform: rotate(-3deg); }
+    92% { transform: rotate(2deg); }
+    94% { transform: rotate(-1deg); }
+    96% { transform: rotate(0.5deg); }
+    98% { transform: rotate(0deg); }
+  }
 
   /* ── INTERACTIVE PACK REVEAL ─────────── */
   .pack-stage {
@@ -270,7 +283,11 @@
     object-fit: contain;
     pointer-events: none;
     user-select: none;
+    animation: packShake 5s ease-in-out infinite;
+    transform-origin: 50% 65%;
   }
+  .pack-stage.opened .pack-img,
+  .pack:hover .pack-img { animation: none; }
 
   .pack-inner {
     position: absolute; inset: 0;
@@ -365,8 +382,25 @@
     position: relative;
     will-change: transform, opacity;
   }
-  .reveal-card img {
+  .reveal-card img#revealImg {
     width: 100%; height: 100%; object-fit: contain; display: block;
+  }
+  .reveal-badge {
+    position: absolute;
+    top: 8%; left: 8%;
+    width: 28%; height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,.45));
+    z-index: 2;
+    /* Pop-in animation when card is revealed */
+    opacity: 0;
+    transform: scale(.4) rotate(-12deg);
+    transition: opacity .25s ease, transform .45s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  .pack-stage.opened .reveal-badge {
+    opacity: 1;
+    transform: scale(1) rotate(-6deg);
+    transition-delay: .35s;
   }
   .reveal-card.is-common,
   .reveal-card.is-common::after,
@@ -386,12 +420,12 @@
   /* Dismiss: slide up & fade */
   .pack-stage.opened.dismissing .reveal-card {
     animation: none !important;
-    transform: translateY(-140%) scale(.85) rotate(-4deg) !important;
+    transform: translateY(-160%) scale(.85) rotate(-4deg) !important;
     opacity: 0 !important;
     visibility: visible;
     transition:
-      transform .55s cubic-bezier(.5,0,.75,0),
-      opacity .45s ease .05s,
+      transform .55s cubic-bezier(.4, 0, 1, 1) 0s,
+      opacity .4s ease-in .15s,
       visibility 0s linear .55s !important;
   }
   /* While dismissing, keep pack hidden — only re-show after card is gone */
@@ -794,7 +828,10 @@
           <i style="--tx:0;--ty:170px;background:#DA0000"></i>
         </div>
         <div class="pack-reveal">
-          <div class="reveal-card" id="revealCard"><img id="revealImg" alt="Carta revelada" src="assets/card-wild-1.png"></div>
+          <div class="reveal-card" id="revealCard">
+            <img id="revealImg" alt="Carta revelada" src="assets/card-wild-1.png">
+            <img id="revealBadge" class="reveal-badge" src="assets/badge-cash.svg" alt="">
+          </div>
         </div>
         <div class="pack-hint">Clique pacote para abrir</div>
         <button class="pack-reset" type="button" id="packReset">Abrir outra</button>
@@ -1073,6 +1110,7 @@
     const reset = document.getElementById('packReset');
     const card  = document.getElementById('revealCard');
     const img   = document.getElementById('revealImg');
+    const badge = document.getElementById('revealBadge');
     if (!stage) return;
 
     const POOL = [
@@ -1081,19 +1119,36 @@
       { src: 'assets/card-wild-1.png',   type: 'wild',   label: 'WILDCARD' },
       { src: 'assets/card-wild-2.png',   type: 'wild',   label: 'WILDCARD' }
     ];
+    const BADGES = [
+      'assets/badge-cash.svg',
+      'assets/badge-spins.svg',
+      'assets/badge-freebet.svg',
+      'assets/badge-oddao.svg',
+      'assets/badge-ganho-aumentado.svg',
+      'assets/badge-chance-extra.svg'
+    ];
     let lastIdx = -1;
+    let lastBadgeIdx = -1;
     function pickCard() {
       let i;
       do { i = Math.floor(Math.random() * POOL.length); } while (i === lastIdx && POOL.length > 1);
       lastIdx = i;
       return POOL[i];
     }
+    function pickBadge() {
+      let i;
+      do { i = Math.floor(Math.random() * BADGES.length); } while (i === lastBadgeIdx && BADGES.length > 1);
+      lastBadgeIdx = i;
+      return BADGES[i];
+    }
     // Preload
     POOL.forEach(c => { const im = new Image(); im.src = c.src; });
+    BADGES.forEach(b => { const im = new Image(); im.src = b; });
 
     function setCard(c) {
       img.src = c.src;
       card.classList.toggle('is-common', c.type === 'common');
+      if (badge) badge.src = pickBadge();
     }
     // Initial random
     setCard(pickCard());
@@ -1112,11 +1167,38 @@
     function closePack(e) {
       if (e) e.stopPropagation();
       if (!stage.classList.contains('opened')) return;
-      stage.classList.add('dismissing');
+      // Drive the dismiss transition via inline styles so the browser
+      // reliably interpolates from the current opened transform — CSS-only
+      // class swaps were getting skipped on subsequent cycles.
+      if (card) {
+        const cs = getComputedStyle(card);
+        // Pin current transform so the transition starts from "here"
+        card.style.transition = 'none';
+        card.style.transform = cs.transform;
+        card.style.opacity = cs.opacity;
+        card.style.animation = 'none';
+        // Force reflow so the pinned starting state takes effect
+        void card.offsetWidth;
+        // Add dismissing class (CSS hides pack/badge, kills float, etc.)
+        stage.classList.add('dismissing');
+        // Now apply the dismiss target with an explicit transition
+        card.style.transition = 'transform .55s cubic-bezier(.4, 0, 1, 1), opacity .4s ease-in .15s';
+        card.style.transform = 'translateY(-160%) scale(.85) rotate(-4deg)';
+        card.style.opacity = '0';
+      } else {
+        stage.classList.add('dismissing');
+      }
       // After slide-up finishes, drop both states so pack re-appears
       setTimeout(() => {
         stage.classList.remove('opened');
         stage.classList.remove('dismissing');
+        // Clear inline styles so the next reveal uses base CSS again
+        if (card) {
+          card.style.transition = '';
+          card.style.transform = '';
+          card.style.opacity = '';
+          card.style.animation = '';
+        }
       }, 600);
     }
 
