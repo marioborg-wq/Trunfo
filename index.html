@@ -1655,14 +1655,12 @@
 <script>
   (function() {
     const cta = document.getElementById('mobileStickyCta');
-    const heroBtn = document.querySelector('.hero-actions .btn-primary');
-    if (!cta || !heroBtn) return;
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        cta.classList.toggle('visible', !e.isIntersecting);
-      });
-    }, { threshold: 0 });
-    obs.observe(heroBtn);
+    if (!cta) return;
+    const onScroll = () => {
+      cta.classList.toggle('visible', window.scrollY > 40);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
   })();
 </script>
 
