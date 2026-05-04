@@ -57,24 +57,75 @@
     background: rgba(10,10,10,.95);
     backdrop-filter: blur(12px);
     padding: 10px 48px;
+    justify-content: space-between;
   }
-  .nav-logo { display: flex; align-items: center; position: relative; }
+  .nav-logo { display: flex; align-items: center; position: relative; transition: transform .25s ease; }
   .nav-logo .logo-full,
   .nav-logo .logo-icon {
-    transition: opacity .25s ease, transform .25s ease;
+    transition: opacity .25s ease, transform .25s ease, height .25s ease;
   }
   .nav-logo .logo-full { height: var(--logo-size, 73px); width: auto; }
   .nav-logo .logo-icon {
-    position: absolute; left: 50%; top: 50%;
-    height: calc(var(--logo-size, 73px) * 0.52); width: auto;
-    transform: translate(-50%, -50%) scale(.85);
+    position: absolute; left: 0; top: 50%;
+    height: 36px; width: auto;
+    transform: translateY(-50%) scale(.85);
     opacity: 0; pointer-events: none;
   }
   nav.scrolled .nav-logo .logo-full {
     opacity: 0; transform: scale(.9);
+    height: 36px;
   }
   nav.scrolled .nav-logo .logo-icon {
-    opacity: 1; transform: translate(-50%, -50%) scale(1);
+    opacity: 1; transform: translateY(-50%) scale(1);
+  }
+  nav.scrolled .nav-logo { width: 36px; }
+
+  /* Mini countdown in nav */
+  .nav-countdown {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  nav.scrolled .nav-countdown { opacity: 1; }
+  .nav-cd-label {
+    font-size: 10px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-right: 4px;
+  }
+  .nav-cd-grid {
+    display: flex; align-items: baseline; gap: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-cd-cell {
+    display: flex; align-items: baseline; gap: 3px;
+  }
+  .nav-cd-num {
+    font-size: 16px; font-weight: 700; line-height: 1;
+    color: #fff; letter-spacing: -.01em;
+  }
+  .nav-cd-unit {
+    font-size: 10px; font-weight: 500;
+    color: rgba(255,255,255,.5);
+    text-transform: lowercase;
+  }
+  .nav-cd-sep {
+    font-size: 14px; font-weight: 300;
+    color: rgba(255,255,255,.2);
+    line-height: 1;
+  }
+  @media (max-width: 600px) {
+    .nav-cd-label { display: none; }
+    .nav-cd-num { font-size: 14px; }
+    .nav-cd-unit { font-size: 9px; }
+    .nav-cd-grid { gap: 4px; }
+  }
+  @media (max-width: 380px) {
+    .nav-cd-cell:nth-child(7),
+    .nav-cd-sep:nth-child(6) { display: none; }
   }
   .nav-cta {
     position: absolute; right: 48px; top: 50%; transform: translateY(-50%) translateY(-6px);
@@ -97,6 +148,63 @@
     .nav-cta { display: none; }
   }
   .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
+
+  /* ── COUNTDOWN ───────────────────────── */
+  .countdown {
+    position: absolute;
+    top: 116px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    pointer-events: none;
+  }
+  .countdown-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .countdown-grid {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .countdown-cell {
+    min-width: 64px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 8px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .countdown-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px; font-weight: 700; line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+  .countdown-unit {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 500; letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .countdown-sep {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px; font-weight: 300; line-height: 1;
+    color: rgba(255,255,255,.25);
+    padding-top: 10px;
+  }
+  @media (max-width: 480px) {
+    .countdown { top: 88px; }
+    .countdown-cell { min-width: 54px; padding: 8px 6px; }
+    .countdown-num { font-size: 22px; }
+    .countdown-unit { font-size: 9px; }
+    .countdown-sep { font-size: 22px; padding-top: 8px; }
+    .countdown-grid { gap: 6px; }
+  }
 
   /* ── HERO ────────────────────────────── */
   .hero {
@@ -138,7 +246,7 @@
   .hero-inner {
     position: relative; z-index: 2;
     width: 100%; max-width: 1200px;
-    margin: 0 auto; padding: 120px 48px 80px;
+    margin: 0 auto; padding: 210px 48px 80px;
     display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
   }
   .hero-badge {
@@ -721,7 +829,7 @@
     .nav-logo .logo-icon { height: calc(var(--logo-size, 73px) * 0.41); }
     .hero-inner {
       grid-template-columns: 1fr;
-      padding: 76px 20px 56px;
+      padding: 184px 20px 56px;
       gap: 20px;
       text-align: center;
     }
@@ -754,7 +862,7 @@
     .cards-grid { gap: 10px; }
     .pack-stage { max-width: 216px; }
     .hero-visual { min-height: 240px; }
-    .hero-inner { padding: 32px 20px 32px; gap: 12px; }
+    .hero-inner { padding: 144px 20px 32px; gap: 12px; }
     .hero-title { font-size: clamp(30px, 8vw, 40px); }
     .hero-stat-pills .pill { font-size: 11px; padding: 7px 12px; }
   }
@@ -791,6 +899,26 @@
 </svg>
 
   </div>
+  <div class="nav-countdown" aria-hidden="true">
+    <span class="nav-cd-label">Lançamento</span>
+    <div class="nav-cd-grid">
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="days">00</span><span class="nav-cd-unit">d</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="hours">00</span><span class="nav-cd-unit">h</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="minutes">00</span><span class="nav-cd-unit">m</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="seconds">00</span><span class="nav-cd-unit">s</span>
+      </div>
+    </div>
+  </div>
   <a class="nav-cta" href="#" data-cta>Registra Agora</a>
 </nav>
 
@@ -798,6 +926,30 @@
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-lines"></div>
+  <div class="countdown" id="countdown" aria-label="Lançamento em">
+    <div class="countdown-label">Lançamento em</div>
+    <div class="countdown-grid">
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="days">00</div>
+        <div class="countdown-unit">Dias</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="hours">00</div>
+        <div class="countdown-unit">Horas</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="minutes">00</div>
+        <div class="countdown-unit">Min</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="seconds">00</div>
+        <div class="countdown-unit">Seg</div>
+      </div>
+    </div>
+  </div>
   <div class="hero-inner">
     <div class="hero-content">
       <h1 class="hero-title">DAILY REWARD<br>CARDS.</h1>
@@ -1093,6 +1245,38 @@
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 40);
   });
+
+  // Countdown to launch
+  (function(){
+    const target = new Date('2026-06-01T00:00:00-03:00').getTime();
+    const els = {
+      days: document.querySelectorAll('[data-cd="days"], [data-cd-mini="days"]'),
+      hours: document.querySelectorAll('[data-cd="hours"], [data-cd-mini="hours"]'),
+      minutes: document.querySelectorAll('[data-cd="minutes"], [data-cd-mini="minutes"]'),
+      seconds: document.querySelectorAll('[data-cd="seconds"], [data-cd-mini="seconds"]'),
+    };
+    if (!els.days.length) return;
+    const pad = (n) => String(Math.max(0, n)).padStart(2, '0');
+    const set = (nodes, val) => nodes.forEach(n => n.textContent = val);
+    function tick(){
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        set(els.days, '00'); set(els.hours, '00');
+        set(els.minutes, '00'); set(els.seconds, '00');
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      set(els.days, pad(d));
+      set(els.hours, pad(h));
+      set(els.minutes, pad(m));
+      set(els.seconds, pad(s));
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
 
   // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
