@@ -716,6 +716,11 @@
   .card-badge {
     position: absolute; top: 20px; left: 20px; z-index: 2;
     width: 60px !important; height: 60px !important; pointer-events: none;
+    transition: opacity .15s linear .35s;
+  }
+  .game-card.flipped .card-badge {
+    opacity: 0;
+    transition: opacity .15s linear .2s;
   }
   .cards-legend {
     display: flex; gap: 32px; margin-top: 32px; align-items: flex-start;
