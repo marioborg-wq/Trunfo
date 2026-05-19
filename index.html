@@ -923,6 +923,88 @@
     .hero-title { font-size: clamp(30px, 8vw, 40px); }
     .hero-stat-pills .pill { font-size: 11px; padding: 7px 12px; }
   }
+
+  /* ── T&C MODAL ───────────────────────── */
+  .tc-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity .25s ease;
+  }
+  .tc-overlay.open { display: flex; opacity: 1; }
+  .tc-modal {
+    background: #141414;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 14px;
+    width: 100%; max-width: 640px;
+    max-height: 85vh;
+    display: flex; flex-direction: column;
+    transform: translateY(20px) scale(.98);
+    transition: transform .3s ease;
+  }
+  .tc-overlay.open .tc-modal { transform: translateY(0) scale(1); }
+  .tc-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+  }
+  .tc-title {
+    font-family: 'NNSwinton', serif; font-style: italic;
+    font-size: 24px; line-height: 1; color: #fff;
+    text-transform: uppercase;
+  }
+  .tc-close {
+    background: transparent; border: none; cursor: pointer;
+    width: 32px; height: 32px; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,.55);
+    font-size: 24px; line-height: 1;
+    border-radius: 50%;
+    transition: color .15s, background .15s;
+  }
+  .tc-close:hover { color: #fff; background: rgba(255,255,255,.06); }
+  .tc-body {
+    overflow-y: auto;
+    padding: 22px 26px 28px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tc-body ol {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: tcitem;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .tc-body li {
+    position: relative;
+    padding-left: 36px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; line-height: 1.6;
+    color: rgba(255,255,255,.78);
+    counter-increment: tcitem;
+  }
+  .tc-body li::before {
+    content: counter(tcitem, decimal-leading-zero);
+    position: absolute; left: 0; top: 0;
+    width: 26px;
+    font-family: 'Inter', sans-serif; font-style: normal;
+    font-size: 14px;
+    color: var(--red);
+    font-weight: 700;
+    letter-spacing: .02em;
+  }
+  body.tc-open { overflow: hidden; }
+  @media (max-width: 480px) {
+    .tc-overlay { padding: 16px; align-items: flex-end; }
+    .tc-modal { max-height: 90vh; border-radius: 16px 16px 0 0; }
+    .tc-head { padding: 18px 20px 14px; }
+    .tc-title { font-size: 20px; }
+    .tc-body { padding: 18px 20px 24px; }
+    .tc-body li { font-size: 13px; padding-left: 32px; }
+  }
 </style>
 </head>
 <body>
@@ -1258,18 +1340,42 @@
 
       </div>
       <ul class="footer-links">
-        <li><a href="#">Termos e Condições</a></li>
+        <li><a href="#" id="tcLink">Termos e Condições</a></li>
         <li><a href="https://www.kto.bet.br/jogo-responsavel/" target="_blank" rel="noopener">Jogo Responsável</a></li>
         <li><a href="https://www.kto.bet.br/politica-privacidade/" target="_blank" rel="noopener">Privacidade</a></li>
         <li><a href="https://www.kto.bet.br/contato/" target="_blank" rel="noopener">Contato</a></li>
       </ul>
     </div>
     <div class="footer-bottom">
-      <p class="footer-legal">O Trunfo é uma funcionalidade exclusiva para clientes KTO com conta ativa. Prêmios sujeitos a termos e condições específicos. Jogue com responsabilidade. O jogo pode criar dependência. +18.</p>
+      <p class="footer-legal">O Trunfo é uma funcionalidade exclusiva para clientes KTO conta ativa. Prêmios sujeitos a termos e condições específicos. Jogue com responsabilidade. O jogo pode criar dependência. +18.</p>
       <div class="age-badge">18+</div>
     </div>
   </div>
 </footer>
+
+<!-- T&C MODAL -->
+<div class="tc-overlay" id="tcOverlay" role="dialog" aria-modal="true" aria-labelledby="tcTitle" aria-hidden="true">
+  <div class="tc-modal" role="document">
+    <div class="tc-head">
+      <h3 class="tc-title" id="tcTitle">Termos e Condições</h3>
+      <button class="tc-close" type="button" id="tcClose" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="tc-body">
+      <ol>
+        <li>O Trunfo está disponível de 9 de junho, às 09h00, a 19 de julho às 23h59 (horário de Brasília).</li>
+        <li>A promoção está disponível para clientes com conta verificada na KTO. Jogadores cujas contas possuam quaisquer restrições ativas não serão elegíveis para abrir seu pacote diário até que a restrição seja removida.</li>
+        <li>A cada dia durante o período promocional, os jogadores elegíveis poderão abrir um pacote e revelar uma carta. Cada carta revelará um resultado que não poderá ser alterado ou contestado.</li>
+        <li>Cada jogador elegível poderá abrir apenas um pacote por dia. O pacote diário estará disponível a partir das 00h00 e expirará às 23h59 (horário de Brasília) do mesmo dia.</li>
+        <li>Qualquer pacote não aberto no respectivo dia expirará e o resultado daquele dia será perdido. Os pacotes não são acumulados para os dias seguintes.</li>
+        <li>Os termos e condições específicos de cada recompensa serão exibidos ao abrir o pacote, quando aplicável.</li>
+        <li>Todas as ofertas e prêmios do Trunfo terão validade de 24 horas a partir do momento em que o pacote for aberto. Isso significa que, se você abrir um pacote às 13h e receber uma oferta, ela deverá ser utilizada até às 12h59 do dia seguinte.</li>
+        <li>Caso identifiquemos qualquer jogo irregular com bônus (também conhecido como caça-bônus) ou qualquer participação que consideremos indevida, reservamo-nos o direito de cancelar o bônus, anular promoções aplicadas à conta do jogador, reaver benefícios concedidos e excluir jogadores desta e de futuras promoções.</li>
+        <li>Reservamo-nos o direito de alterar ou revogar a promoção e suas recompensas a qualquer momento. É de responsabilidade do cliente verificar eventuais atualizações.</li>
+        <li>Os Termos &amp; Condições Gerais da KTO se aplicam.</li>
+      </ol>
+    </div>
+  </div>
+</div>
 
 <script>
   // Nav scroll
@@ -1748,6 +1854,33 @@
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
+  // T&C modal
+  (function(){
+    const link = document.getElementById('tcLink');
+    const overlay = document.getElementById('tcOverlay');
+    const closeBtn = document.getElementById('tcClose');
+    if (!link || !overlay || !closeBtn) return;
+    function open(e){
+      if (e) e.preventDefault();
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('tc-open');
+    }
+    function close(){
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('tc-open');
+    }
+    link.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) close();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
   })();
 </script>
 
