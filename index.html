@@ -885,6 +885,13 @@
   @media (max-width: 768px) {
     nav { padding: 14px 18px; }
     nav.scrolled { padding: 8px 18px; }
+    .hero-bg {
+      background-image: url('assets/Background_mobile.jpg');
+      background-size: cover;
+      background-position: center top;
+      -webkit-mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
+              mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
+    }
     .pack-tag { display: none; }
     .pack-hint { display: none; }
     .nav-logo .logo-full { height: calc(var(--logo-size, 73px) * 0.77); }
