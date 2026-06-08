@@ -282,6 +282,12 @@
   }
   .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .hero-rg { display: block; height: 26px; width: auto; margin-top: 24px; opacity: .6; }
+  .hero-eligibility {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; color: rgba(255,255,255,.38);
+    line-height: 1.5; margin-top: 10px;
+    max-width: 420px;
+  }
   .btn-primary {
     background: var(--green); color: #000;
     font-weight: 700; font-size: 14px; letter-spacing: .02em;
@@ -1132,6 +1138,7 @@
         <a class="btn-ghost" href="#como-funciona">Como Funciona</a>
       </div>
       <img class="hero-rg" src="assets/18-rg.svg" alt="18+ Jogue com responsabilidade">
+
     </div>
     <div class="hero-visual">
       <div class="pack-stage" id="packStage" role="button" tabindex="0" aria-label="Abrir pacote"
@@ -1144,7 +1151,7 @@
           <div class="pack-half right"></div>
           <img class="pack-badge" src="assets/badge_novo-pacote.svg" alt="Novo pacote" width="180" height="180" decoding="async">
         </div>
-        <div class="pack-tag">Pacote do Dia</div>
+        <div class="pack-tag">Clique para experimentar.</div>
         <div class="pack-burst" aria-hidden="true">
           <i style="--tx:-140px;--ty:-110px;background:#DA0000"></i>
           <i style="--tx:130px;--ty:-130px;background:#FAD749"></i>
@@ -1161,7 +1168,7 @@
             <img id="revealBadge" class="reveal-badge" src="assets/badge-cash.svg" alt="" width="90" height="90" decoding="async">
           </div>
         </div>
-        <div class="pack-hint">Clique pacote para abrir</div>
+        <div class="pack-hint">Registre-se para ganhar de verdade.</div>
         <button class="pack-reset" type="button" id="packReset">Abrir outra</button>
       </div>
     </div>
