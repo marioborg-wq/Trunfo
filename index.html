@@ -1146,7 +1146,7 @@
     <div class="hero-content">
       <h1 class="hero-title">ABRIU,<br>GANHOU.</h1>
       <p class="hero-sub">Todo dia uma nova carta premiada para você.<br><span class="hero-register-hint">Registre-se para ganhar de verdade.</span></p>
-      <div class="hero-actions">
+      <div class="hero-actions" id="heroActions">
         <a class="btn-primary" href="https://www.kto.bet.br/app/registro/" target="_blank" rel="noopener">Registre Agora</a>
         <a class="btn-ghost" href="#como-funciona">Como Funciona</a>
       </div>
@@ -1978,8 +1978,15 @@
   (function() {
     const cta = document.getElementById('mobileStickyCta');
     if (!cta) return;
+    const heroActions = document.getElementById('heroActions');
     const onScroll = () => {
-      cta.classList.toggle('visible', window.scrollY > 40);
+      if (heroActions) {
+        const rect = heroActions.getBoundingClientRect();
+        const outOfView = rect.bottom < 0;
+        cta.classList.toggle('visible', outOfView);
+      } else {
+        cta.classList.toggle('visible', window.scrollY > 40);
+      }
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
