@@ -254,7 +254,7 @@
   .hero-inner {
     position: relative; z-index: 2;
     width: 100%; max-width: 1200px;
-    margin: 0 auto; padding: 210px 48px 80px;
+    margin: 0 auto; padding: 140px 48px 80px;
     display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center;
   }
   .hero-badge {
@@ -274,11 +274,13 @@
     color: #fff;
     margin-bottom: 24px;
   }
-  .hero-title em { color: #fff; font-style: italic; }
   .hero-sub {
     font-family: 'Inter', sans-serif;
     font-size: 17px; line-height: 1.65;
-    color: var(--muted); margin-bottom: 36px; max-width: 480px;
+    color: var(--muted); margin-bottom: 36px; margin-top: 0; max-width: 480px;
+  }
+  .hero-register-hint {
+    color: rgba(255,255,255,.5);
   }
   .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
   .hero-rg { display: block; height: 26px; width: auto; margin-top: 24px; opacity: .6; }
@@ -374,10 +376,13 @@
   .pack-hint {
     position: absolute; left: 50%; bottom: -100px;
     transform: translateX(-50%);
-    font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
-    color: rgba(255,255,255,.55);
+    font-size: 11px; font-weight: 400; letter-spacing: .05em; text-transform: none;
+    color: #fff;
     display: flex; align-items: center; gap: 10px;
     pointer-events: none;
+  }
+  .pack-hint-link { color: #fff; }
+  .pack-hint-grey { color: rgba(255,255,255,.45); white-space: nowrap; }
     transition: opacity .3s;
     white-space: nowrap;
   }
@@ -860,6 +865,7 @@
   .age-badge-rg {
     height: 26px; width: auto; flex-shrink: 0; opacity: .6;
   }
+  .footer-register-hint { display: none; }
   .footer-totop {
     display: flex; justify-content: center;
     padding: 32px 24px;
@@ -900,11 +906,18 @@
     }
     .pack-tag { display: none; }
     .pack-hint { display: none; }
+    .footer-register-hint {
+      display: block;
+      text-align: center;
+      font-size: 11px; font-weight: 400; letter-spacing: .05em; text-transform: none;
+      color: #fff;
+      margin-top: 8px; width: 100%;
+    }
     .nav-logo .logo-full { height: calc(var(--logo-size, 73px) * 0.77); }
     .nav-logo .logo-icon { height: calc(var(--logo-size, 73px) * 0.41); }
     .hero-inner {
       grid-template-columns: 1fr;
-      padding: 184px 20px 56px;
+      padding: 120px 20px 56px;
       gap: 20px;
       text-align: center;
     }
@@ -959,7 +972,7 @@
     .cards-grid { grid-auto-columns: minmax(58%, 58%); gap: 10px; }
     .pack-stage { max-width: 216px; }
     .hero-visual { min-height: 240px; }
-    .hero-inner { padding: 144px 20px 32px; gap: 12px; }
+    .hero-inner { padding: 100px 20px 32px; gap: 12px; }
     .hero-title { font-size: clamp(30px, 8vw, 38px); }
     .hero-stat-pills .pill { font-size: 11px; padding: 7px 12px; }
   }
@@ -1132,7 +1145,7 @@
   <div class="hero-inner">
     <div class="hero-content">
       <h1 class="hero-title">ABRIU,<br>GANHOU.</h1>
-      <p class="hero-sub">Todo dia uma nova carta premiada para você.</p>
+      <p class="hero-sub">Todo dia uma nova carta premiada para você.<br><span class="hero-register-hint">Registre-se para ganhar de verdade.</span></p>
       <div class="hero-actions">
         <a class="btn-primary" href="https://www.kto.bet.br/app/registro/" target="_blank" rel="noopener">Registre Agora</a>
         <a class="btn-ghost" href="#como-funciona">Como Funciona</a>
@@ -1168,7 +1181,7 @@
             <img id="revealBadge" class="reveal-badge" src="assets/badge-cash.svg" alt="" width="90" height="90" decoding="async">
           </div>
         </div>
-        <div class="pack-hint">Registre-se para ganhar de verdade.</div>
+        <div class="pack-hint" style="display:none"><span class="pack-hint-link">Registre-se</span><span class="pack-hint-grey"> para ganhar de verdade.</span></div>
         <button class="pack-reset" type="button" id="packReset">Abrir outra</button>
       </div>
     </div>
@@ -1461,6 +1474,7 @@
     <div class="footer-bottom">
       <p class="footer-legal">O Trunfo é uma funcionalidade exclusiva para clientes KTO conta ativa. Prêmios sujeitos a termos e condições específicos. Jogue com responsabilidade. O jogo pode criar dependência. +18.</p>
       <img class="age-badge-rg" src="assets/18-rg.svg" alt="18+ Jogue com responsabilidade">
+      <p class="footer-register-hint" style="display:none"><span class="pack-hint-link">Registre-se</span><span class="pack-hint-grey"> para ganhar de verdade.</span></p>
     </div>
   </div>
 </footer>
