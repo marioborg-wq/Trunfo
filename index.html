@@ -425,15 +425,17 @@
     pointer-events: none;
   }
   .pack-tag {
-    position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%);
-    font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
-    background: rgba(218,0,0,.92); color: #fff;
-    padding: 6px 14px; border-radius: 100px;
+    position: absolute; bottom: -56px; left: 50%; transform: translateX(-50%);
+    font-size: 13px; font-weight: 500; letter-spacing: .01em;
+    color: rgba(255,255,255,.55);
     white-space: nowrap;
     z-index: 4;
-    transition: opacity .25s;
+    opacity: 0;
+    transition: opacity .5s ease;
+    pointer-events: none;
+    text-align: center;
   }
-  .pack-stage.opened .pack-tag { opacity: 0; }
+  .pack-tag.visible { opacity: 1; }
 
   /* Tear / opening animation: split into 2 halves using clip-path on full images */
   .pack-half {
@@ -904,7 +906,7 @@
       -webkit-mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
               mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
     }
-    .pack-tag { display: none; }
+    .pack-tag { white-space: normal; width: 220px; text-align: center; bottom: -64px; }
     .pack-hint { display: none; }
     .footer-register-hint {
       display: block;
@@ -1164,7 +1166,7 @@
           <div class="pack-half right"></div>
           <img class="pack-badge" src="assets/badge_novo-pacote.svg" alt="Novo pacote" width="180" height="180" decoding="async">
         </div>
-        <div class="pack-tag">Clique para experimentar.</div>
+        <div class="pack-tag" id="packRegMsg"><a href="https://www.kto.bet.br/app/registro/?utm_source=cazetv" style="color:#ffffff;text-decoration:none;pointer-events:auto;">Registre-se</a> aqui para abrir seu pacote diário.</div>
         <div class="pack-burst" aria-hidden="true">
           <i style="--tx:-140px;--ty:-110px;background:#DA0000"></i>
           <i style="--tx:130px;--ty:-130px;background:#FAD749"></i>
@@ -1612,14 +1614,24 @@
 
     function openPack(e) {
       if (e) e.stopPropagation();
-      if (stage.classList.contains('dismissing')) return;
-      if (stage.classList.contains('opened')) {
-        // Already open — slide card up & away, then bring pack back
-        closePack();
+      if (stage.classList.contains('shaking')) return;
+      // If message already visible, redirect to registration
+      const msg = document.getElementById('packRegMsg');
+      if (msg && msg.classList.contains('visible')) {
+        window.location.href = 'https://www.kto.bet.br/app/registro/?utm_source=cazetv';
         return;
       }
-      setCard(pickCard());
-      stage.classList.add('opened');
+      // Shake the pack
+      const packWrapper = stage.querySelector('.pack');
+      if (packWrapper) {
+        stage.classList.add('shaking');
+        packWrapper.style.animation = 'shake .65s ease';
+        setTimeout(() => {
+          packWrapper.style.animation = '';
+          stage.classList.remove('shaking');
+          if (msg) msg.classList.add('visible');
+        }, 700);
+      }
     }
     function closePack(e) {
       if (e) e.stopPropagation();
