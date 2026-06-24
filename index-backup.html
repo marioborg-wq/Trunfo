@@ -9,7 +9,7 @@
 <!-- Preload critical above-the-fold assets -->
 <link rel="preload" as="image" href="assets/card-packet.png" fetchpriority="high">
 <link rel="preload" as="image" href="assets/Background.jpg">
-<link rel="preload" as="image" href="assets/badge_novo-pacote-casetv.png">
+<link rel="preload" as="image" href="assets/badge_novo-pacote.svg">
 <!-- Card list — edit assets/cards/cards.js to add or remove cards -->
 <script src="assets/cards/cards.js"></script>
 <style>
@@ -88,7 +88,53 @@
   }
   nav.scrolled .nav-logo { width: 36px; }
 
-
+  /* Mini countdown in nav */
+  .nav-countdown {
+    position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Inter', sans-serif;
+    opacity: 0; pointer-events: none;
+    transition: opacity .25s ease;
+  }
+  nav.scrolled .nav-countdown { opacity: 1; }
+  .nav-cd-label {
+    font-size: 10px; font-weight: 600; letter-spacing: .16em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+    margin-right: 4px;
+  }
+  .nav-cd-grid {
+    display: flex; align-items: baseline; gap: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .nav-cd-cell {
+    display: flex; align-items: baseline; gap: 3px;
+  }
+  .nav-cd-num {
+    font-size: 16px; font-weight: 700; line-height: 1;
+    color: #fff; letter-spacing: -.01em;
+  }
+  .nav-cd-unit {
+    font-size: 10px; font-weight: 500;
+    color: rgba(255,255,255,.5);
+    text-transform: lowercase;
+  }
+  .nav-cd-sep {
+    font-size: 14px; font-weight: 300;
+    color: rgba(255,255,255,.2);
+    line-height: 1;
+  }
+  @media (max-width: 600px) {
+    .nav-cd-label { display: none; }
+    .nav-cd-num { font-size: 14px; }
+    .nav-cd-unit { font-size: 9px; }
+    .nav-cd-grid { gap: 4px; }
+  }
+  @media (max-width: 380px) {
+    .nav-cd-cell:nth-child(7),
+    .nav-cd-sep:nth-child(6) { display: none; }
+  }
   .nav-cta {
     position: absolute; right: 48px; top: 50%; transform: translateY(-50%) translateY(-6px);
     background: var(--green); color: #000;
@@ -111,7 +157,62 @@
   }
   .nav-cta:hover { opacity: .88; transform: translateY(-1px); }
 
-
+  /* ── COUNTDOWN ───────────────────────── */
+  .countdown {
+    position: absolute;
+    top: 148px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    pointer-events: none;
+  }
+  .countdown-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 600; letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .countdown-grid {
+    display: flex; align-items: flex-start; gap: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+  .countdown-cell {
+    min-width: 64px;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 8px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .countdown-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px; font-weight: 700; line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+  .countdown-unit {
+    font-family: 'Inter', sans-serif;
+    font-size: 10px; font-weight: 500; letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
+  }
+  .countdown-sep {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px; font-weight: 300; line-height: 1;
+    color: rgba(255,255,255,.25);
+    padding-top: 10px;
+  }
+  @media (max-width: 480px) {
+    .countdown { top: 88px; }
+    .countdown-cell { min-width: 54px; padding: 8px 6px; }
+    .countdown-num { font-size: 22px; }
+    .countdown-unit { font-size: 9px; }
+    .countdown-sep { font-size: 22px; padding-top: 8px; }
+    .countdown-grid { gap: 6px; }
+  }
 
   /* ── HERO ────────────────────────────── */
   .hero {
@@ -304,82 +405,13 @@
   /* Foil sheen removed */
   .pack-glint { display: none; }
 
-  /* ── Moving shine on the card border ── */
-  @property --shine-angle {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: 0deg;
-  }
-  .card-shine {
-    position: absolute;
-    height: 100%; aspect-ratio: 0.583;
-    left: 50%; top: 50%; transform: translate(-50%, -50%);
-    border-radius: 6% / 3.5%;
-    padding: 3px;
-    z-index: 4;
-    pointer-events: none;
-    background: conic-gradient(from var(--shine-angle),
-      transparent 0deg,
-      transparent 295deg,
-      rgba(255,255,255,.15) 320deg,
-      rgba(255,255,255,.95) 340deg,
-      rgba(255,255,255,.15) 352deg,
-      transparent 360deg);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            mask-composite: exclude;
-    animation: shineSpin 2.4s linear infinite;
-  }
-  @keyframes shineSpin {
-    to { --shine-angle: 360deg; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .card-shine { animation: none; }
-  }
-
-  /* ── Diagonal surface sweep ── */
-  .card-sweep {
-    position: absolute;
-    height: 100%; aspect-ratio: 0.583;
-    left: 50%; top: 50%; transform: translate(-50%, -50%);
-    border-radius: 6% / 3.5%;
-    overflow: hidden;
-    z-index: 4;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
-  .card-sweep::before {
-    content: "";
-    position: absolute;
-    top: -30%; bottom: -30%;
-    width: 45%;
-    left: -60%;
-    background: linear-gradient(100deg,
-      transparent,
-      rgba(255,255,255,.12) 35%,
-      rgba(255,255,255,.55) 50%,
-      rgba(255,255,255,.12) 65%,
-      transparent);
-    transform: skewX(-18deg);
-    animation: cardSweep 5s ease-in-out 2s infinite;
-  }
-  @keyframes cardSweep {
-    0%   { left: -60%; }
-    16%  { left: 130%; }
-    100% { left: 130%; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .card-sweep::before { animation: none; opacity: 0; }
-  }
-
   .pack-img {
     position: absolute; inset: 0;
     width: 100%; height: 100%;
     object-fit: contain;
     pointer-events: none;
     user-select: none;
-    animation: none;
+    animation: packShake 5s ease-in-out infinite;
     transform-origin: 50% 65%;
   }
   .pack-stage.opened .pack-img,
@@ -393,17 +425,15 @@
     pointer-events: none;
   }
   .pack-tag {
-    position: absolute; bottom: -56px; left: 50%; transform: translateX(-50%);
-    font-size: 13px; font-weight: 500; letter-spacing: .01em;
-    color: rgba(255,255,255,.55);
+    position: absolute; bottom: -44px; left: 50%; transform: translateX(-50%);
+    font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase;
+    background: rgba(218,0,0,.92); color: #fff;
+    padding: 6px 14px; border-radius: 100px;
     white-space: nowrap;
     z-index: 4;
-    opacity: 0;
-    transition: opacity .5s ease;
-    pointer-events: none;
-    text-align: center;
+    transition: opacity .25s;
   }
-  .pack-tag.visible { opacity: 1; }
+  .pack-stage.opened .pack-tag { opacity: 0; }
 
   /* Tear / opening animation: split into 2 halves using clip-path on full images */
   .pack-half {
@@ -449,23 +479,6 @@
     opacity: 0;
     transition: opacity .25s;
   }
-
-  /* Aposta Grátis badge */
-  .pack-freebet-badge {
-    position: absolute;
-    right: auto; left: 12.5%; top: 5%;
-    width: 22.1%; height: auto;
-    z-index: 5;
-    pointer-events: none;
-    filter: drop-shadow(0 8px 20px rgba(0,0,0,.5));
-    animation: none;
-    transform-origin: 50% 65%;
-  }
-  @keyframes badgeBobR {
-    0%,100% { transform: rotate(-8deg) translateY(0); }
-    50%     { transform: rotate(-8deg) translateY(-6px); }
-  }
-  .pack-stage.opened .pack-freebet-badge { opacity: 0; transition: opacity .25s; }
 
   @keyframes shake {
     0%,100% { transform: translateX(0); }
@@ -891,8 +904,7 @@
       -webkit-mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
               mask-image: linear-gradient(to bottom, #000 60%, rgba(0,0,0,.6) 82%, transparent 100%);
     }
-    .pack-tag { white-space: normal; width: 220px; text-align: center; bottom: auto; top: -44px; }
-    .hero-visual { padding-top: 28px; }
+    .pack-tag { display: none; }
     .pack-hint { display: none; }
     .footer-register-hint {
       display: block;
@@ -1079,7 +1091,26 @@
 </svg>
 
   </div>
-
+  <div class="nav-countdown" aria-hidden="true">
+    <span class="nav-cd-label">Lançamento</span>
+    <div class="nav-cd-grid">
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="days">00</span><span class="nav-cd-unit">d</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="hours">00</span><span class="nav-cd-unit">h</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="minutes">00</span><span class="nav-cd-unit">m</span>
+      </div>
+      <span class="nav-cd-sep">:</span>
+      <div class="nav-cd-cell">
+        <span class="nav-cd-num" data-cd-mini="seconds">00</span><span class="nav-cd-unit">s</span>
+      </div>
+    </div>
+  </div>
   <a class="nav-cta" href="https://www.kto.bet.br/app/registro/?utm_source=cazetv" data-cta>Registrar</a>
 </nav>
 
@@ -1087,7 +1118,30 @@
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-lines"></div>
-
+  <div class="countdown" id="countdown" aria-label="Lançamento em">
+    <div class="countdown-label">Lançamento em</div>
+    <div class="countdown-grid">
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="days">00</div>
+        <div class="countdown-unit">Dias</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="hours">00</div>
+        <div class="countdown-unit">Horas</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="minutes">00</div>
+        <div class="countdown-unit">Min</div>
+      </div>
+      <div class="countdown-sep">:</div>
+      <div class="countdown-cell">
+        <div class="countdown-num" data-cd="seconds">00</div>
+        <div class="countdown-unit">Seg</div>
+      </div>
+    </div>
+  </div>
   <div class="hero-inner">
     <div class="hero-content">
       <h1 class="hero-title">ABRIU,<br>GANHOU.</h1>
@@ -1101,19 +1155,16 @@
     </div>
     <div class="hero-visual">
       <div class="pack-stage" id="packStage" role="button" tabindex="0" aria-label="Abrir pacote"
-           style="--pack-img:url('assets/hero-card.png'); --pack-mask:url('assets/hero-card.png');">
+           style="--pack-img:url('assets/card-packet.png'); --pack-mask:url('assets/card-packet.png');">
         <div class="pack" id="packEl">
-          <img class="pack-img" src="assets/hero-card.png" alt="Carta Trunfo KTO" width="827" height="1417" fetchpriority="high" decoding="async">
-          <div class="card-shine" aria-hidden="true"></div>
-          <div class="card-sweep" aria-hidden="true"></div>
+          <img class="pack-img" src="assets/card-packet.png" alt="Pacote Trunfo KTO" width="720" height="1144" fetchpriority="high" decoding="async">
           <span class="pack-glint"></span>
           <div class="pack-inner"></div>
           <div class="pack-half left"></div>
           <div class="pack-half right"></div>
-          <img class="pack-badge" src="assets/badge_novo-pacote-casetv.png" alt="Novo pacote" width="180" height="180" decoding="async">
-          <img class="pack-freebet-badge" src="assets/badge-freebet.svg" alt="Aposta Grátis" width="90" height="90" decoding="async">
+          <img class="pack-badge" src="assets/badge_novo-pacote.svg" alt="Novo pacote" width="180" height="180" decoding="async">
         </div>
-        <div class="pack-tag" id="packRegMsg"><a href="https://www.kto.bet.br/app/registro/?utm_source=cazetv" style="color:#ffffff;text-decoration:none;pointer-events:auto;">Registre-se</a> aqui para abrir seu pacote diário.</div>
+        <div class="pack-tag">Clique para experimentar.</div>
         <div class="pack-burst" aria-hidden="true">
           <i style="--tx:-140px;--ty:-110px;background:#DA0000"></i>
           <i style="--tx:130px;--ty:-130px;background:#FAD749"></i>
@@ -1459,7 +1510,42 @@
     nav.classList.toggle('scrolled', window.scrollY > 40);
   });
 
-
+  // Countdown to launch
+  (function(){
+    const target = new Date('2026-06-09T09:00:00-03:00').getTime();
+    const els = {
+      days: document.querySelectorAll('[data-cd="days"], [data-cd-mini="days"]'),
+      hours: document.querySelectorAll('[data-cd="hours"], [data-cd-mini="hours"]'),
+      minutes: document.querySelectorAll('[data-cd="minutes"], [data-cd-mini="minutes"]'),
+      seconds: document.querySelectorAll('[data-cd="seconds"], [data-cd-mini="seconds"]'),
+    };
+    if (!els.days.length) return;
+    const heroCd = document.getElementById('countdown');
+    const navCd = document.querySelector('.nav-countdown');
+    const pad = (n) => String(Math.max(0, n)).padStart(2, '0');
+    const set = (nodes, val) => nodes.forEach(n => n.textContent = val);
+    let timer = null;
+    function tick(){
+      const diff = target - Date.now();
+      if (diff <= 0) {
+        // Launch reached — hide both countdowns
+        if (heroCd) heroCd.style.display = 'none';
+        if (navCd) navCd.style.display = 'none';
+        if (timer) clearInterval(timer);
+        return;
+      }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      set(els.days, pad(d));
+      set(els.hours, pad(h));
+      set(els.minutes, pad(m));
+      set(els.seconds, pad(s));
+    }
+    tick();
+    timer = setInterval(tick, 1000);
+  })();
 
   // Reveal on scroll
   const reveals = document.querySelectorAll('.reveal');
@@ -1526,7 +1612,14 @@
 
     function openPack(e) {
       if (e) e.stopPropagation();
-      window.location.href = 'https://www.kto.bet.br/app/registro/?utm_source=cazetv';
+      if (stage.classList.contains('dismissing')) return;
+      if (stage.classList.contains('opened')) {
+        // Already open — slide card up & away, then bring pack back
+        closePack();
+        return;
+      }
+      setCard(pickCard());
+      stage.classList.add('opened');
     }
     function closePack(e) {
       if (e) e.stopPropagation();
